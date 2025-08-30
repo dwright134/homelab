@@ -1,8 +1,8 @@
 ---
-clusterName: labrax
+clusterName: ${clusterName}
 talosVersion: v1.10.6
 kubernetesVersion: v1.33.3
-endpoint: https://labrax.${domainName}:6443
+endpoint: https://${clusterName}.${domainName}:6443
 allowSchedulingOnMasters: true
 cniConfig:
   name: none
@@ -11,6 +11,8 @@ patches:
     cluster:
       discovery:
         enabled: true
+      network:
+        dnsDomain: ${domainName}
     machine:
       certSANs:
         - ${clusterEndpointIP}
@@ -30,8 +32,94 @@ patches:
           path: /var/cri/conf.d/metrics.toml
           op: create
 nodes:
-  - hostname: talos-cp01.${domainName}
+  - hostname: cp01.${clusterName}.${domainName}
     ipAddress: 172.16.2.145
+    controlPlane: true
+    machineSpec:
+      arch: amd64
+      mode: metal
+      bootMethod: disk-image
+    installDisk: /dev/sda
+    networkInterfaces:
+      - interface: eth0
+        dhcp: true
+    patches:
+      - |-
+        machine:
+          kubelet:
+            extraMounts:
+              - destination: /var/lib/longhorn
+                type: bind
+                source: /var/lib/longhorn
+                options:
+                  - bind
+                  - rshared
+                  - rw
+          disks:
+            - device: /dev/nvme0n1 # The name of the disk to use.
+              partitions:
+                - mountpoint: /var/lib/longhorn # Where to mount the partition.
+    schematic:
+      customization:
+        extraKernelArgs:
+          - net.ifnames=0
+        systemExtensions:
+          officialExtensions:
+            - siderolabs/intel-ucode
+            - siderolabs/i915
+            - siderolabs/iscsi-tools
+            - siderolabs/nvme-cli
+            - siderolabs/tailscale
+            - siderolabs/util-linux-tools
+    extensionServices:
+      - name: tailscale
+        environment:
+          - TS_AUTHKEY=${tsAuthKey}
+  - hostname: cp02.${clusterName}.${domainName}
+    ipAddress: 172.16.2.147
+    controlPlane: true
+    machineSpec:
+      arch: amd64
+      mode: metal
+      bootMethod: disk-image
+    installDisk: /dev/sda
+    networkInterfaces:
+      - interface: eth0
+        dhcp: true
+    patches:
+      - |-
+        machine:
+          kubelet:
+            extraMounts:
+              - destination: /var/lib/longhorn
+                type: bind
+                source: /var/lib/longhorn
+                options:
+                  - bind
+                  - rshared
+                  - rw
+          disks:
+            - device: /dev/nvme0n1 # The name of the disk to use.
+              partitions:
+                - mountpoint: /var/lib/longhorn # Where to mount the partition.
+    schematic:
+      customization:
+        extraKernelArgs:
+          - net.ifnames=0
+        systemExtensions:
+          officialExtensions:
+            - siderolabs/intel-ucode
+            - siderolabs/i915
+            - siderolabs/iscsi-tools
+            - siderolabs/nvme-cli
+            - siderolabs/tailscale
+            - siderolabs/util-linux-tools
+    extensionServices:
+      - name: tailscale
+        environment:
+          - TS_AUTHKEY=${tsAuthKey}
+  - hostname: cp03.${clusterName}.${domainName}
+    ipAddress: 172.16.2.154
     controlPlane: true
     machineSpec:
       arch: amd64
