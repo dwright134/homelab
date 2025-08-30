@@ -1,0 +1,202 @@
+---
+clusterName: labrax
+talosVersion: v1.10.6
+kubernetesVersion: v1.33.3
+endpoint: https://labrax.${domainName}:6443
+allowSchedulingOnMasters: true
+cniConfig:
+  name: none
+patches: 
+  - |- 
+    - op: add
+      path: /cluster/discovery/enabled
+      value: true
+    - op: replace
+      path: /machine/network/kubespan
+      value:
+        enabled: true
+nodes:
+  - hostname: talos-cp01.${domainName}
+    ipAddress: 172.16.2.145
+    controlPlane: true
+    arch: amd64
+    talosImageURL: factory.talos.dev/metal-installer/50a567f5e16f46e55f6143455f7c248af816a2fa46025eac95224d7d7dbbb37b
+    installDisk: /dev/sda
+    networkInterfaces:
+      - interface: eth0
+        dhcp: true
+    patches:
+      - |-
+        machine:
+          kubelet:
+            extraMounts:
+              - destination: /var/lib/longhorn
+                type: bind
+                source: /var/lib/longhorn
+                options:
+                  - bind
+                  - rshared
+                  - rw
+          disks:
+            - device: /dev/nvme0n1 # The name of the disk to use.
+              partitions:
+                - mountpoint: /var/lib/longhorn # Where to mount the partition.
+    schematic:
+      customization:
+        systemExtensions:
+          officialExtensions:
+            - siderolabs/i915
+            - siderolabs/nvme-cli
+  - hostname: talos-cp02.${domainName}
+    ipAddress: 172.16.2.147
+    controlPlane: true
+    arch: amd64
+    talosImageURL: factory.talos.dev/metal-installer/50a567f5e16f46e55f6143455f7c248af816a2fa46025eac95224d7d7dbbb37b
+    installDisk: /dev/sda
+    networkInterfaces:
+      - interface: eth0
+        dhcp: true
+    patches:
+      - |-
+        machine:
+          kubelet:
+            extraMounts:
+              - destination: /var/lib/longhorn
+                type: bind
+                source: /var/lib/longhorn
+                options:
+                  - bind
+                  - rshared
+                  - rw
+          disks:
+            - device: /dev/nvme0n1 # The name of the disk to use.
+              partitions:
+                - mountpoint: /var/lib/longhorn # Where to mount the partition.
+    schematic:
+      customization:
+        systemExtensions:
+          officialExtensions:
+            - siderolabs/i915
+            - siderolabs/nvme-cli
+  - hostname: talos-cp03.${domainName}
+    ipAddress: 172.16.2.151
+    controlPlane: true
+    arch: amd64
+    talosImageURL: factory.talos.dev/metal-installer/50a567f5e16f46e55f6143455f7c248af816a2fa46025eac95224d7d7dbbb37b
+    installDisk: /dev/sda
+    networkInterfaces:
+      - interface: eth0
+        dhcp: true
+    patches:
+      - |-
+        machine:
+          kubelet:
+            extraMounts:
+              - destination: /var/lib/longhorn
+                type: bind
+                source: /var/lib/longhorn
+                options:
+                  - bind
+                  - rshared
+                  - rw
+          disks:
+            - device: /dev/nvme0n1 # The name of the disk to use.
+              partitions:
+                - mountpoint: /var/lib/longhorn # Where to mount the partition.
+    schematic:
+      customization:
+        systemExtensions:
+          officialExtensions:
+            - siderolabs/i915
+            - siderolabs/nvme-cli
+controlPlane:
+  patches:
+    - |-
+      cluster:
+        id: ${clusterID}
+        secret: ${clusterSecret}
+        aggregatorCA:
+          crt: ${k8sAggregatorCert}
+          key: ${k8sAggregatorCertKey}
+        serviceAccount:
+          key: ${k8sServiceAccountKey}
+        apiServer:
+          certSANs:
+            - ${clusterEndpointIP}
+        ca:
+          crt: ${clusterCert}
+          key: ${clusterCertKey}
+        etcd:
+          ca:
+            crt: ${etcdCert}
+            key: ${etcdCertKey}
+        proxy:
+          disabled: true
+      machine:
+        ca:
+          crt: ${machineCert}
+          key: ${machineCertKey}
+        certSANs:
+          - ${clusterEndpointIP}
+          - ${clusterName}.${domainName}
+        kubelet:
+          extraArgs:
+            rotate-server-certificates: true
+        network:
+          extraHostEntries:
+            - aliases:
+              - ${clusterName}.${domainName}
+              ip: ${clusterEndpointIP}
+        files:
+          - content: |
+              [metrics]\n address = \"0.0.0.0:11234\"\n
+            path: /var/cri/conf.d/metrics.toml
+            op: create
+        token: ${machineToken}
+  schematic:
+    customization:
+      extraKernelArgs:
+        - net.ifnames = 0
+      systemExtensions:
+        officialExtensions:
+          - siderolabs/iscsi-tools
+          - siderolabs/tailscale
+          - siderolabs/util-linux-tools
+worker:
+  inlinePatch:
+    cluster:
+      id: ${clusterID}
+      secret: ${clusterSecret}
+      ca:
+        crt: ${clusterCert}
+        key: ${clusterCertKey}
+    machine:
+      ca:
+        crt: ${machineCert}
+        key: ${machineCertKey}
+      certSANs:
+        - ${clusterEndpointIP}
+      kubelet:
+        extraArgs:
+          rotate-server-certificates: true
+      network:
+        extraHostEntries:
+          - aliases:
+            - ${clusterName}.${domainName}
+            ip: ${clusterEndpointIP}
+      files:
+        - content: |
+            [metrics]\n address = \"0.0.0.0:11234\"\n
+          path: /var/cri/conf.d/metrics.toml
+          op: create
+      token: ${machineToken}
+  schematic:
+    customization:
+      extraKernelArgs:
+        - net.ifnames=0
+      systemExtensions:
+        officialExtensions:
+            - siderolabs/iscsi-tools
+            - siderolabs/tailscale
+            - siderolabs/util-linux-tools
+
