@@ -9,8 +9,6 @@ patches:
     cluster:
       discovery:
         enabled: true
-      network:
-        dnsDomain: ${domainName}
     machine:
       network:
         extraHostEntries:
