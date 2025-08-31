@@ -1,0 +1,20 @@
+---
+creation_rules:
+  - path_regex: provision/.*\.sops\.ya?ml
+    unencrypted_regex: "^(kind)$"
+    key_groups:
+      - age:
+          - age1cwwvujgvczvztye0z5znc9ryu6zx2nk58ghq6rxhqdc5tt5v5cdqweq7tc
+  - path_regex: cluster/.*\.sops\.ya?ml
+    encrypted_regex: '((?i)(pass|secret($|[^N])|key|token|^data$|^stringData))'
+    key_groups:
+      - age:
+          - age1cwwvujgvczvztye0z5znc9ryu6zx2nk58ghq6rxhqdc5tt5v5cdqweq7tc
+  - path_regex: .*\.sops\.ya?ml
+    key_groups:
+      - age:
+          - age1cwwvujgvczvztye0z5znc9ryu6zx2nk58ghq6rxhqdc5tt5v5cdqweq7tc
+  - path_regex: .*\.sops\.toml
+    key_groups:
+      - age:
+          - age1cwwvujgvczvztye0z5znc9ryu6zx2nk58ghq6rxhqdc5tt5v5cdqweq7tc
