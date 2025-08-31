@@ -7,7 +7,7 @@ metadata:
 spec:
   interval: 10m
   ref:
-    branch: main
+    branch: master
   url: https://github.com/dwright134/homelab
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
