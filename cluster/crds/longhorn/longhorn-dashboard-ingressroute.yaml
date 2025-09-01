@@ -1,0 +1,16 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: longhorn-dashboard-ingressroute
+  namespace: networking
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`${SECRET_LONGHORN_DASHBOARD_HOSTNAME}`)
+      kind: Rule
+      services:
+        - name: longhorn-frontend
+          port: 80
+  tls:
+    secretName: longhorn-dashboard-certificate-secret
