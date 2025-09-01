@@ -29,3 +29,11 @@ spec:
       retries: 3
       remediateLastFailure: true
     cleanupOnFail: true
+  values:
+    ingressRoute:
+      dashboard:
+        enabled: true
+        entryPoints: [websecure]
+        matchRule: Host(`${SECRET_TRAEFIK_DASHBOARD_HOSTNAME}`)
+        tls:
+          secretName: traefik-dashboard-certificate-secret
