@@ -6,3 +6,11 @@ metadata:
   namespace: flux-system
 data:
   TIMEZONE: "America/Chicago"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kubevip
+  namespace: kube-system
+data:
+  range-global: 172.16.2.60-172.16.2.70

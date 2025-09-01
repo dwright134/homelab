@@ -22,7 +22,7 @@ patches:
           path: /var/cri/conf.d/metrics.toml
           op: create
 nodes:
-  - hostname: cp01.${clusterName}.${domainName}
+  - hostname: cp01
     ipAddress: 172.16.2.145
     controlPlane: true
     installDisk: /dev/sda
@@ -54,7 +54,7 @@ nodes:
             - siderolabs/iscsi-tools
             - siderolabs/util-linux-tools
             - siderolabs/tailscale
-  - hostname: cp02.${clusterName}.${domainName}
+  - hostname: cp02
     ipAddress: 172.16.2.147
     controlPlane: true
     installDisk: /dev/sda
@@ -86,7 +86,7 @@ nodes:
             - siderolabs/iscsi-tools
             - siderolabs/util-linux-tools
             - siderolabs/tailscale
-  - hostname: cp03.${clusterName}.${domainName}
+  - hostname: cp03
     ipAddress: 172.16.2.151
     controlPlane: true
     installDisk: /dev/sda
