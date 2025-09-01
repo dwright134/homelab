@@ -2,7 +2,7 @@
 clusterName: ${clusterName}
 talosVersion: v1.10.7
 kubernetesVersion: v1.33.3
-endpoint: https://${clusterName}.${domainName}:6443
+endpoint: https://172.16.2.145:6443
 allowSchedulingOnMasters: true
 patches: 
   - |- 
@@ -16,11 +16,6 @@ patches:
       kubelet:
         extraArgs:
           rotate-server-certificates: true
-      network:
-        extraHostEntries:
-          - aliases:
-            - ${clusterName}.${domainName}
-            ip: ${clusterEndpointIP}
       files:
         - content: |
             [metrics]\n address = \"0.0.0.0:11234\"\n
@@ -32,7 +27,7 @@ nodes:
     controlPlane: true
     installDisk: /dev/sda
     networkInterfaces:
-      - interface: eth0
+      - interface: eno2
         dhcp: true
     patches:
       - |-
@@ -47,7 +42,7 @@ nodes:
                   - rshared
                   - rw
           disks:
-            - device: /dev/sdb # The name of the disk to use.
+            - device: /dev/nvme0n1 # The name of the disk to use.
               partitions:
                 - mountpoint: /var/lib/longhorn # Where to mount the partition.
   - hostname: cp02.${clusterName}.${domainName}
@@ -55,7 +50,7 @@ nodes:
     controlPlane: true
     installDisk: /dev/sda
     networkInterfaces:
-      - interface: eth0
+      - interface: eno2
         dhcp: true
     patches:
       - |-
@@ -70,7 +65,7 @@ nodes:
                   - rshared
                   - rw
           disks:
-            - device: /dev/sdb # The name of the disk to use.
+            - device: /dev/nvme0n1 # The name of the disk to use.
               partitions:
                 - mountpoint: /var/lib/longhorn # Where to mount the partition.
   - hostname: cp03.${clusterName}.${domainName}
@@ -78,7 +73,7 @@ nodes:
     controlPlane: true
     installDisk: /dev/sda
     networkInterfaces:
-      - interface: eth0
+      - interface: eno2
         dhcp: true
     patches:
       - |-
@@ -93,10 +88,9 @@ nodes:
                   - rshared
                   - rw
           disks:
-            - device: /dev/sdb # The name of the disk to use.
+            - device: /dev/nvme0n1 # The name of the disk to use.
               partitions:
                 - mountpoint: /var/lib/longhorn # Where to mount the partition.
-
     schematic:
       customization:
         extraKernelArgs:
