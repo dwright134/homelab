@@ -7,10 +7,10 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`${SECRET_LONGHORN_DASHBOARD_HOSTNAME}`)
+    - match: Host(`longhorn.home.danobytes.com`)
       kind: Rule
       services:
         - name: longhorn-frontend
           port: 80
   tls:
-    secretName: longhorn-dashboard-certificate-secret
+    secretName: cluster-domain-certificate-secret

@@ -4,3 +4,4 @@ kind: Kustomization
 resources:
   - kube-vip
   - cluster-issuers
+  - longhorn
