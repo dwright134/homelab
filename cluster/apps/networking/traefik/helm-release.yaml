@@ -34,6 +34,6 @@ spec:
       dashboard:
         enabled: true
         entryPoints: [websecure]
-        matchRule: Host(`${SECRET_TRAEFIK_DASHBOARD_HOSTNAME}`)
+        matchRule: Host(`traefik.home.danobytes.com`)
         tls:
           secretName: cluster-domain-certificate-secret 
