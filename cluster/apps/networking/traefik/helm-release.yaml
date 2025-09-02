@@ -36,4 +36,4 @@ spec:
         entryPoints: [websecure]
         matchRule: Host(`${SECRET_TRAEFIK_DASHBOARD_HOSTNAME}`)
         tls:
-          secretName: traefik-dashboard-certificate-secret
+          secretName: cluster-domain-certificate-secret 

@@ -1,12 +1,12 @@
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: traefik-dashboard-ingressroute-certificate
+  name: cluster-domain-certificate
   namespace: networking
 spec:
-  secretName: traefik-dashboard-certificate-secret
+  secretName: cluster-domain-certificate-secret
   issuerRef:
     name: letsencrypt-production
     kind: ClusterIssuer
   dnsNames:
-    - ${SECRET_TRAEFIK_DASHBOARD_HOSTNAME}
+    - *.${SECRET_HOSTNAME}
