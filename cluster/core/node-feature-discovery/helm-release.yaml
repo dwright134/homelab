@@ -8,6 +8,7 @@ spec:
   chart:
     spec:
       chart: node-feature-discovery
+      reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
         name: node-feature-discovery-chart
