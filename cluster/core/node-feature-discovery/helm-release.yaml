@@ -12,5 +12,13 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: node-feature-discovery-chart
+        namespace: flux-system
       version: v0.17.3
   interval: 1m0s
+  install:
+    createNamespace: false
+    remediation:
+      retries: 5
+  upgrade:
+    remediation:
+      retries: 5
