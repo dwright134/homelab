@@ -1,0 +1,35 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: intel-device-plugins-gpu
+  namespace: intel-device-plugins-gpu
+spec:
+  chart:
+    spec:
+      chart: intel-device-plugins-gpu
+      sourceRef:
+        kind: HelmRepository
+        name: intel-charts
+        namespace: flux-system
+      version: v0.32.1
+      reconcileStrategy: ChartVersion
+  interval: 1m0s
+  install:
+    createNamespace: false
+    crds: Create
+    remediation:
+      retries: 5
+  upgrade:
+    crds: CreateReplace
+    remediation:
+      retries: 5
+  values:
+    name: gpudeviceplugin
+    sharedDevNum: 1
+    logLevel: 2
+    resourceManager: false
+    enableMonitoring: true
+    allocationPolicy: "none"
+    nodeSelector:
+      intel.feature.node.kubernetes.io/gpu: 'true'
+    nodeFeatureRule: true
