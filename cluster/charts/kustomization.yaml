@@ -5,3 +5,4 @@ resources:
   - longhorn.yaml
   - cert-manager.yaml
   - traefik.yaml
+  - node-feature-discovery.yaml

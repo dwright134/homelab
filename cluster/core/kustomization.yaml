@@ -5,3 +5,4 @@ resources:
   - kube-vip
   - cluster-issuers
   - longhorn
+  - node-feature-discovery
