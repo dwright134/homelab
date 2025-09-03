@@ -25,6 +25,8 @@ nodes:
   - hostname: cp01
     ipAddress: 172.16.2.145
     controlPlane: true
+    nodeLabels:
+      gpu: true
     installDisk: /dev/sda
     networkInterfaces:
       - interface: eno2
@@ -57,6 +59,8 @@ nodes:
   - hostname: cp02
     ipAddress: 172.16.2.147
     controlPlane: true
+    nodeLabels:
+      gpu: true
     installDisk: /dev/sda
     networkInterfaces:
       - interface: eno2
@@ -89,6 +93,8 @@ nodes:
   - hostname: cp03
     ipAddress: 172.16.2.151
     controlPlane: true
+    nodeLabels:
+      gpu: true
     installDisk: /dev/sda
     networkInterfaces:
       - interface: eno2
